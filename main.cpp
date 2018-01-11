@@ -6,6 +6,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
+    // Set proxy if necessary
     QNetworkProxy ROAproxy;
     ROAproxy.setHostName("proxy.roa");
     ROAproxy.setPort(8080);

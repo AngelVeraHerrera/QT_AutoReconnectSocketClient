@@ -1,11 +1,10 @@
 #include "pyawareplugin.h"
 
-PyAwarePlugin::PyAwarePlugin(QString host, int port) : QObject(nullptr)
+PyAwarePlugin::PyAwarePlugin(QString host, int port) :
+    piaware_host(host), piaware_port(port)
 {
     this->piaware_socket = new QTcpSocket(this);
     this->piaware_alive_timer = new QTimer(this);
-    this->piaware_host = host;
-    this->piaware_port = port;
 
     QObject::connect(piaware_socket, SIGNAL(connected()),this, SLOT(connected()));
     QObject::connect(piaware_socket, SIGNAL(disconnected()),this, SLOT(disconnected()));
@@ -19,14 +18,12 @@ PyAwarePlugin::PyAwarePlugin(QString host, int port) : QObject(nullptr)
 void PyAwarePlugin::checkConnection()
 {
     QProcess pingProcess;
-    QString exec = "ping";
     QStringList params;
-    QString p_stdout, p_stderr;
 
     params << "-n" << "1";
     params << this->piaware_host;
 
-    pingProcess.start(exec,params,QIODevice::ReadOnly);
+    pingProcess.start("ping",params,QIODevice::ReadOnly);
     pingProcess.waitForFinished(-1);
 
     if (pingProcess.exitCode() == 0)
@@ -75,9 +72,8 @@ void PyAwarePlugin::readyRead()
     while(this->piaware_socket->canReadLine())
     {
         QString data = QString(this->piaware_socket->readLine());
-        list.append(data);
         data.remove(QRegExp("[\\n\\t\\r]"));
-        qDebug()<< data;
+        list.append(data);
+        qDebug()<<data;
     }
-
 }

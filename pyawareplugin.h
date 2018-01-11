@@ -8,7 +8,6 @@
 #include <QNetworkProxy>
 #include <QTimer>
 #include <QProcess>
-#include <QTDbus/QtDBus>
 
 class PyAwarePlugin : public QObject
 {
